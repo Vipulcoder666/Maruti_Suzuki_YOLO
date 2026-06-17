@@ -1,0 +1,28 @@
+# YOLO Weights and Checkpoints
+*.pt
+models/*.pt
+models/bottle_detector/
+models/evaluation/
+runs/
+
+# Custom Local Datasets & Configuration
+data/
+data.yaml
+
+# Python Cache and Bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Operating System Files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+
+# IDE and Editor Directories
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
