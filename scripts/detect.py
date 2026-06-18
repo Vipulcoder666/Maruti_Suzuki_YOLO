@@ -20,9 +20,11 @@ def main():
         print("Error: Could not access webcam. Verify that camera index (0) is correct.")
         return
 
-    # Set camera resolution (standard matches YOLO training input)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+    # Set higher camera resolution for better far‑object detection (1280x720)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+    # No hard‑coded scale factor; will be computed per frame based on the actual width
+    
 
     # Variables for FPS calculation
     prev_time = 0
@@ -46,9 +48,9 @@ def main():
             print("Error: Failed to grab frame.")
             break
 
-        # Run model inference on frame
-        # verbose=False keeps the console clean
-        results = model(frame, conf=conf_threshold, device="cpu", verbose=False)
+        # Run model inference on the full‑resolution frame for better far‑object detection
+        # Using a larger img size (1280) preserves detail of distant bottles
+        results = model(frame, conf=conf_threshold, imgsz=1280, device="cpu", verbose=False)
         
         # Draw detections
         annotated_frame = frame.copy()
@@ -82,9 +84,9 @@ def main():
         current_fps = 1.0 / time_diff if time_diff > 0 else 0
         fps = 0.9 * fps + 0.1 * current_fps  # smooth value
 
-        # Draw HUD background banner at top
+        # Draw HUD background banner at top (full‑width of original frame)
         hud_bg = annotated_frame.copy()
-        cv2.rectangle(hud_bg, (0, 0), (640, 40), (0, 0, 0), -1)
+        cv2.rectangle(hud_bg, (0, 0), (frame.shape[1], 40), (0, 0, 0), -1)
         cv2.addWeighted(hud_bg, 0.6, annotated_frame, 0.4, 0, annotated_frame)
 
         # Draw HUD texts
