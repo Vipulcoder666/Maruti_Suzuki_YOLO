@@ -20,9 +20,9 @@ def main():
         print("Error: Could not access webcam. Verify that camera index (0) is correct.")
         return
 
-    # Set higher camera resolution for better far‑object detection (1280x720)
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+    # Set camera resolution (standard matches YOLO training input)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
     # No hard‑coded scale factor; will be computed per frame based on the actual width
     
 
@@ -48,9 +48,8 @@ def main():
             print("Error: Failed to grab frame.")
             break
 
-        # Run model inference on the full‑resolution frame for better far‑object detection
-        # Using a larger img size (1280) preserves detail of distant bottles
-        results = model(frame, conf=conf_threshold, imgsz=1280, device="cpu", verbose=False)
+        # Run model inference on the frame (match training size 640)
+        results = model(frame, conf=conf_threshold, imgsz=640, device="cpu", verbose=False)
         
         # Draw detections
         annotated_frame = frame.copy()
